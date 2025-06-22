@@ -8,6 +8,8 @@ import type { Piece } from "../../types/piece.types";
 import { coordsToSquare } from "../../utils/utils";
 import { isLegalMove } from "../../utils/moveValidator";
 import { extractSquareFromId } from "../../utils/utils";
+import { isKingInCheck } from "../../utils/gameLogic";
+
 import "./style.css";
 
 function renderPiece(x: number, y: number, piece: Piece)
@@ -24,8 +26,14 @@ function renderSquare(j: number, pieces: Piece[]) {
     const x = j % 8;
     const y = Math.floor(j / 8);
 
+    const inCheckPieces = pieces.filter((piece) => {
+        return isKingInCheck(piece.color, pieces) && piece.type === 'king'
+    });
+    
+    const inCheck = inCheckPieces.length > 0 && inCheckPieces[0].position === coordsToSquare(x, y);
+
     return(
-        <BoardSquare x={x} y={y} key={j}> 
+        <BoardSquare x={x} y={y} key={j} inCheck={inCheck}> 
             { pieces.map(piece => renderPiece(x, y, piece))}
         </BoardSquare>
     )

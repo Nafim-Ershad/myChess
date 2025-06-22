@@ -3,6 +3,7 @@ import type { Piece } from '../../types/piece.types';
 import { getInitialBoard } from '../../constants/initialBoardSetup';
 import { GameContext } from './GameContext';
 import type { iBoardHistory } from '../../types/board.types';
+import { isKingInCheck, isCheckmate } from '../../utils/gameLogic';
 
 
 const GameProvider = ({ children }: { children: ReactNode }) => {
@@ -21,7 +22,7 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
     const captured = getLivePieceAt(to); // if there's a capture
 
     // Later: validate move
-    const updated = pieces
+    const updatedPieces = pieces
       .filter(p => p.position !== from && p.position !== to) // remove source + target (if capture)
       .concat({
         ...movingPiece,
@@ -34,7 +35,17 @@ const GameProvider = ({ children }: { children: ReactNode }) => {
       { from, to, piece: movingPiece, captured }
     ]);
 
-    setPieces(updated);
+    const nextTurn = currentTurn === 'white' ? 'black' : 'white';
+
+    if (isKingInCheck(nextTurn, updatedPieces)) {
+      console.log(`${nextTurn} is in CHECK!`);
+      if (isCheckmate(nextTurn, updatedPieces)) {
+        console.log(`CHECKMATE! ${currentTurn} wins`);
+        // Optionally: end game, freeze board, show modal, etc.
+      }
+    }
+
+    setPieces(updatedPieces);
     setCurrentTurn(turn => (turn === 'white' ? 'black' : 'white'));
     setSelected(null);
   };

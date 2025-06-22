@@ -21,10 +21,6 @@
     background-color: rgba(242, 255, 128, 0.822);
 }
 
-.square.isOver.isLegal {
-    background-color: rgba(169, 255, 161, 0.719);
-}
-
-.square.isOver.notLegal {
-    background-color: rgba(255, 161, 161, 0.719);
+.square.check {
+    background-color: red;
 }

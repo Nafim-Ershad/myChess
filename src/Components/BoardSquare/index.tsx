@@ -7,10 +7,12 @@ import './style.css';
 interface iBoardSquareProps extends HTMLAttributes<HTMLDivElement> {
     x: number;
     y: number;
+    inCheck: boolean;
 }
 
-function BoardSquare({ x, y, children }: iBoardSquareProps): React.ReactNode {
+function BoardSquare({ x, y, inCheck, children }: iBoardSquareProps): React.ReactNode {
     const isBlack = ( x + y ) % 2;
+
     const {isOver, setNodeRef} = useDroppable({
         id: `droppable-${coordsToSquare(x, y)}`
     });
@@ -19,7 +21,7 @@ function BoardSquare({ x, y, children }: iBoardSquareProps): React.ReactNode {
         <div 
             ref={setNodeRef}
             id={coordsToSquare(x, y)} 
-            className={`square ${isBlack ? 'black' : 'white'} ${isOver ? 'isOver' : ''}`}
+            className={`square ${isBlack ? 'black' : 'white'} ${isOver ? 'isOver' : ''} ${inCheck ? 'check': ''}`}
         >
             { children }
         </div>
